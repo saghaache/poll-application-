@@ -1,0 +1,8 @@
+{% extends 'vote_app/base.html' %}
+
+{% block title %}Déjà voté{% endblock %}
+
+{% block content %}
+  <h2>Vous avez déjà voté pour ce sondage.</h2>
+  <a href="{% url 'poll_list' %}">Retour à la liste des sondages</a>
+{% endblock %}

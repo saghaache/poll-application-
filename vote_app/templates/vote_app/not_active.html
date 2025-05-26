@@ -1,0 +1,9 @@
+{% extends 'vote_app/base.html' %}
+
+{% block title %}Sondage non actif{% endblock %}
+
+{% block content %}
+  <h2>Sondage non actif</h2>
+  <p>Ce sondage n'est pas encore actif ou est déjà terminé.</p>
+  <a href="{% url 'poll_list' %}">Retour à la liste des sondages</a>
+{% endblock %}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Résultats - {{ poll.title }}</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a7476, #202121);
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 0; /* supprimé l’espace sous le h2 */
+        }
+
+        p {
+            margin-top: 0; /* supprimé l’espace au-dessus du p */
+            margin-bottom: 20px; /* espace sous le p (optionnel) */
+        }
+
+        #resultsChart {
+            max-width: 450px;
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-top: 30px;
+            font-size: 1.3rem;
+        }
+
+        ul {
+            padding-left: 20px;
+            list-style: square;
+        }
+
+        li {
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+                <a href="{% url 'login' %}">Déconnexion</a>
+
+    <h2>Résultats - {{ poll.title }}</h2>
+    <p>Total des votes : {{ total_votes }}</p>
+    <canvas id="resultsChart" aria-label="Graphique des résultats du sondage" role="img"></canvas>
+
+    <h3>Pourcentage des votes par option :</h3>
+    <ul>
+        {% for opt in options_percentages %}
+            <li>{{ opt.name }} : <strong>{{ opt.percentage }}%</strong></li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        const labels = JSON.parse('{{ option_names_json|escapejs }}');
+        const dataVotes = JSON.parse('{{ votes_counts_json|escapejs }}');
+
+        const ctx = document.getElementById('resultsChart').getContext('2d');
+
+        const backgroundColors = [
+            'rgba(38, 198, 218, 0.7)',
+            'rgba(3, 169, 244, 0.7)',
+            'rgba(0, 150, 136, 0.7)',
+            'rgba(255, 193, 7, 0.7)',
+            'rgba(255, 87, 34, 0.7)',
+            'rgba(156, 39, 176, 0.7)',
+            'rgba(63, 81, 181, 0.7)'
+        ];
+
+        const borderColors = [
+            'rgba(38, 198, 218, 1)',
+            'rgba(3, 169, 244, 1)',
+            'rgba(0, 150, 136, 1)',
+            'rgba(255, 193, 7, 1)',
+            'rgba(255, 87, 34, 1)',
+            'rgba(156, 39, 176, 1)',
+            'rgba(63, 81, 181, 1)'
+        ];
+
+        const chartData = {
+            labels: labels,
+            datasets: [{
+                data: dataVotes,
+                backgroundColor: backgroundColors.slice(0, labels.length),
+                borderColor: borderColors.slice(0, labels.length),
+                borderWidth: 2,
+                hoverOffset: 30
+            }]
+        };
+
+        const config = {
+            type: 'doughnut',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '50%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#fff',
+                            font: { weight: '600' }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#000',
+                        titleFont: { weight: '700' },
+                        bodyFont: { weight: '600' }
+                    }
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    </script>
+
+</body>
+</html>

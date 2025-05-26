@@ -1,0 +1,33 @@
+{% extends 'vote_app/base.html' %}
+
+{% block title %}Liste des sondages{% endblock %}
+
+{% block content %}
+                <a href="{% url 'login' %}">Déconnexion</a>
+<h2>Liste des sondages</h2>
+
+<ul>
+    {% for poll in polls %}
+    <li>
+        <strong>{{ poll.title }}</strong><br>
+        <a href="{% url 'poll_detail' poll.id %}">Voir détails</a>
+
+        <form action="{% url 'vote_poll' poll.id %}" method="post" style="margin-top: 8px;">
+            {% csrf_token %}
+            {% for option in poll.options.all %}
+            <label>
+                <input 
+                    type="{% if poll.vote_type == 'multiple' %}checkbox{% else %}radio{% endif %}" 
+                    name="options" 
+                    value="{{ option.id }}">
+                {{ option.name }}
+            </label><br>
+            {% endfor %}
+            <button type="submit">Voter</button>
+        </form>
+    </li>
+    {% empty %}
+    <li>Aucun sondage disponible.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

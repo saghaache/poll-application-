@@ -1,0 +1,34 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Mon Application{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Bienvenue sur notre application de vote</h1>
+        <nav>
+            {% if user.is_authenticated %}
+                <!-- Exemple : lien déconnexion -->
+            {% else %}
+                <a href="{% url 'login' %}">Connexion</a>
+                <a href="{% url 'register' %}">Inscription</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Contenu spécifique à chaque page -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© VraiVote 2025</p>
+    </footer>
+</body>
+</html>

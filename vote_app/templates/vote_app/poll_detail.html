@@ -1,0 +1,28 @@
+{% extends 'vote_app/base.html' %}
+
+{% block title %}Détail du sondage{% endblock %}
+
+{% block content %}
+                <a href="{% url 'login' %}">Déconnexion</a>
+
+<h2>{{ poll.title }}</h2>
+
+<form method="post" action="{% url 'vote_poll' poll.id %}">
+    {% csrf_token %}
+    {% for option in poll.options.all %}
+        <label>
+            <input type="radio" name="option" value="{{ option.id }}">
+            {{ option.name }}
+        </label><br />
+        {% if option.description %}
+            <small style="color: #9a959f; margin-left: 20px; display: block;">
+                {{ option.description }}
+            </small>
+        {% endif %}
+    {% endfor %}
+    <button type="submit">Voter</button> <a href="{% url 'results' poll.id %}">Voir les résultats</a>
+
+</form>
+
+
+{% endblock %}
